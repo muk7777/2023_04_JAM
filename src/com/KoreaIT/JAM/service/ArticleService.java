@@ -1,49 +1,59 @@
 package com.KoreaIT.JAM.service;
 
 import java.sql.Connection;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import com.KoreaIT.JAM.dao.ArticleDao;
+import com.KoreaIT.JAM.dto.Article;
 
 public class ArticleService {
-	
+
 	private ArticleDao articleDao;
 	
 	public ArticleService(Connection conn) {
 		this.articleDao = new ArticleDao(conn);
 	}
 
-	public int add(String title, String body) {
-		return articleDao.add(title, body);
+	public int doWrite(String title, String body) {
+		return articleDao.doWrite(title, body);
 	}
 
-	public List<Map<String, Object>> getArticles() {
+	public List<Article> getArticles() {
 		
-		return articleDao.getArticles();
+		List<Map<String, Object>> articleListMap = articleDao.getArticles();
+		
+		List<Article> articles = new ArrayList<>();
+		
+		for(Map<String, Object> articleMap : articleListMap) {
+			articles.add(new Article(articleMap));
+		}
+		
+		return articles;
 	}
 
-	public Map<String, Object> check1(int id) {
-		return articleDao.check1(id);
+	public Article getArticle(int id) {
+		
+		Map<String, Object> articleMap = articleDao.getArticle(id);
+		
+		if (articleMap.isEmpty()) {
+			return null;
+		}
+		
+		return new Article(articleMap);
 	}
 
-	public int check2(int id) {
-		return articleDao.check2(id);
+	public int getArticleCount(int id) {
+		return articleDao.getArticleCount(id);
 	}
 
-	public void update(String title, String body, int id) {
-		articleDao.update(title, body, id);
+	public void doModify(String title, String body, int id) {
+		articleDao.doModify(title, body, id);
 	}
 
-	public boolean check3(int id) {
-		return articleDao.check3(id);
+	public void doDelete(int id) {
+		articleDao.doDelete(id);
 	}
-
-	public void delete(int id) {
-		articleDao.delete(id);
-	}
-
-	
-	
 
 }

@@ -6,23 +6,11 @@ import com.KoreaIT.JAM.util.DBUtil;
 import com.KoreaIT.JAM.util.SecSql;
 
 public class MemberDao {
-	
+
 	private Connection conn;
 	
 	public MemberDao(Connection conn) {
 		this.conn = conn;
-	}
-
-	public void add(String loginId, String loginPw, String name) {
-		
-		SecSql sql = new SecSql();
-		sql.append("INSERT INTO `member`");
-		sql.append("SET regDate = NOW()");
-		sql.append(", updateDate = NOW()");
-		sql.append(", loginId = ?", loginId);
-		sql.append(", loginPw = ?", loginPw);
-		sql.append(", name = ?", name);
-		DBUtil.insert(conn, sql);
 	}
 
 	public boolean isLoginIdDup(String loginId) {
@@ -34,5 +22,18 @@ public class MemberDao {
 		
 		return DBUtil.selectRowBooleanValue(conn, sql);
 	}
-	
+
+	public void doJoin(String loginId, String loginPw, String name) {
+		
+		SecSql sql = new SecSql();
+		sql.append("INSERT INTO `member`");
+		sql.append("SET regDate = NOW()");
+		sql.append(", updateDate = NOW()");
+		sql.append(", loginId = ?", loginId);
+		sql.append(", loginPw = ?", loginPw);
+		sql.append(", name = ?", name);
+		
+		DBUtil.insert(conn, sql);
+	}
+
 }

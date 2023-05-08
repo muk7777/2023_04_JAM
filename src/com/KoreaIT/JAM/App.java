@@ -6,7 +6,6 @@ import java.sql.SQLException;
 import java.util.Scanner;
 
 import com.KoreaIT.JAM.controller.ArticleController;
-import com.KoreaIT.JAM.controller.Controller;
 import com.KoreaIT.JAM.controller.MemberController;
 
 public class App {
@@ -23,8 +22,8 @@ public class App {
 			String url = "jdbc:mysql://127.0.0.1:3306/jdbc_article_manager?useUnicode=true&characterEncoding=utf8&autoReconnect=true&serverTimezone=Asia/Seoul&useOldAliasMetadataBehavior=true&zeroDateTimeNehavior=convertToNull";
 
 			conn = DriverManager.getConnection(url, "root", "");
-			Controller memberController = new MemberController(sc, conn);
-			Controller articleController = new ArticleController(sc, conn);
+			MemberController memberController = new MemberController(conn, sc);
+			ArticleController articleController = new ArticleController(conn, sc);
 			
 
 			while (true) {
