@@ -3,16 +3,19 @@ package com.KoreaIT.JAM.controller;
 import java.sql.Connection;
 import java.util.Scanner;
 
+import com.KoreaIT.JAM.dto.Member;
 import com.KoreaIT.JAM.service.MemberService;
 
 public class MemberController {
 
 	private Scanner sc;
 	private MemberService memberService;
+	private Member loginedMember;
 	
 	public MemberController(Connection conn, Scanner sc) {
 		this.sc = sc;
 		this.memberService = new MemberService(conn);
+		this.loginedMember = null;
 	}
 
 	public void doJoin() {
@@ -89,6 +92,25 @@ public class MemberController {
 		
 		System.out.printf("%s님 환영합니다~\n", name);
 
+	}
+
+	public void doLogin() {
+		if (loginedMember != null) {
+			System.out.println("이미 로그인 되어 있습니다.");
+			return;
+		}
+		
+		System.out.println("== 로그인 ==");
+		
+		System.out.printf("로그인 아이디 : ");
+		String loginId = sc.nextLine().trim();
+		System.out.printf("로그인 비밀번호 : ");
+		String loginPw = sc.nextLine().trim();
+		
+		loginedMember = memberService.doLogin(loginId, loginPw);
+		
+		System.out.printf("%s님 환영합니다.\n", loginedMember.name);
+		
 	}
 	
 }

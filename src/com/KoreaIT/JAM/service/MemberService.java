@@ -3,6 +3,7 @@ package com.KoreaIT.JAM.service;
 import java.sql.Connection;
 
 import com.KoreaIT.JAM.dao.MemberDao;
+import com.KoreaIT.JAM.dto.Member;
 
 public class MemberService {
 
@@ -18,6 +19,10 @@ public class MemberService {
 
 	public void doJoin(String loginId, String loginPw, String name) {
 		memberDao.doJoin(loginId, loginPw, name);
+	}
+
+	public Member doLogin(String loginId, String loginPw) {
+		return memberDao.doLogin(loginId, loginPw);
 	}
 
 }
