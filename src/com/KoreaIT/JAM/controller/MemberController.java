@@ -5,20 +5,24 @@ import java.util.Scanner;
 
 import com.KoreaIT.JAM.dto.Member;
 import com.KoreaIT.JAM.service.MemberService;
+import com.KoreaIT.JAM.session.Session;
 
 public class MemberController {
 
 	private Scanner sc;
 	private MemberService memberService;
-	private Member loginedMember;
 	
 	public MemberController(Connection conn, Scanner sc) {
 		this.sc = sc;
 		this.memberService = new MemberService(conn);
-		this.loginedMember = null;
 	}
 
 	public void doJoin() {
+		if (Session.isLogined()) {
+			System.out.println("로그아웃 후 이용해주세요.");
+			return;
+		}
+		
 		System.out.println("== 회원 가입 ==");
 
 		String loginId = null;
@@ -95,22 +99,54 @@ public class MemberController {
 	}
 
 	public void doLogin() {
-		if (loginedMember != null) {
-			System.out.println("이미 로그인 되어 있습니다.");
+		if (Session.isLogined()) {
+			System.out.println("이미 로그인 상태입니다.");
 			return;
 		}
 		
 		System.out.println("== 로그인 ==");
 		
-		System.out.printf("로그인 아이디 : ");
-		String loginId = sc.nextLine().trim();
-		System.out.printf("로그인 비밀번호 : ");
-		String loginPw = sc.nextLine().trim();
+		while (true) {
+			System.out.printf("로그인 아이디 : ");
+			String loginId = sc.nextLine().trim();
+			if (loginId.length() == 0) {
+				System.out.println("아이디를 입력해주세요.");
+				continue;
+			}
+			
+			System.out.printf("로그인 비밀번호 : ");
+			String loginPw = sc.nextLine().trim();
+			
+			if (loginPw.length() == 0) {
+				System.out.println("비밀번호를 입력해주세요.");
+				continue;
+			}
+			Member member = memberService.getMember(loginId);
+			
+			if (member == null) {
+				System.out.printf("%s는 존재하지 않는 아이디 입니다.\n", loginId);
+				return;
+			}
+			
+			if (!member.loginPw.equals(loginPw)) {
+				System.out.println("비밀번호가 일치하지 않습니다.");
+				return;
+			}
+			
+			Session.login(member);
+			break;
+		}
+		System.out.printf("%s님 환영합니다.\n", Session.loginedMember.name);
 		
-		loginedMember = memberService.doLogin(loginId, loginPw);
-		
-		System.out.printf("%s님 환영합니다.\n", loginedMember.name);
-		
+	}
+
+	public void doLogout() {
+		if (!Session.isLogined()) {
+			System.out.println("이미 로그아웃 상태입니다.");
+			return;
+		}
+		Session.logout();
+		System.out.println("로그아웃 되었습니다.");
 	}
 	
 }

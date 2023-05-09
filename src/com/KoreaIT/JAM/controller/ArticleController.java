@@ -6,6 +6,8 @@ import java.util.Scanner;
 
 import com.KoreaIT.JAM.dto.Article;
 import com.KoreaIT.JAM.service.ArticleService;
+import com.KoreaIT.JAM.session.Session;
+import com.KoreaIT.JAM.util.Util;
 
 public class ArticleController {
 
@@ -18,14 +20,19 @@ public class ArticleController {
 	}
 
 	public void doWrite() {
+		if (!Session.isLogined()) {
+			System.out.println("로그인 후 이용해주세요.");
+			return;
+		}
+		
 		System.out.println("== 게시물 작성 ==");
-
+		
 		System.out.printf("제목 : ");
 		String title = sc.nextLine();
 		System.out.printf("내용 : ");
 		String body = sc.nextLine();
 
-		int id = articleService.doWrite(title, body);
+		int id = articleService.doWrite(title, body, Session.loginedMemberId);
 		
 		System.out.printf("%d번 게시글이 생성되었습니다\n", id);
 	}
@@ -43,7 +50,7 @@ public class ArticleController {
 		System.out.println("번호	|	제목	|	날짜");
 
 		for (Article article : articles) {
-			System.out.printf("%d	|	%s	|	%s\n", article.id, article.title, article.regDate);
+			System.out.printf("%d	|	%s	|	%s\n", article.id, article.title, Util.datetimeformat(article.regDate));
 		}
 	}
 
@@ -59,13 +66,18 @@ public class ArticleController {
 		
 		System.out.printf("== %d번 게시글 상세보기 ==\n", id);
 		System.out.printf("번호 : %d\n", article.id);
-		System.out.printf("작성날짜 : %s\n", article.regDate);
-		System.out.printf("수정날짜 : %s\n", article.updateDate);
+		System.out.printf("작성날짜 : %s\n", Util.datetimeformat(article.regDate));
+		System.out.printf("수정날짜 : %s\n", Util.datetimeformat(article.updateDate));
 		System.out.printf("제목 : %s\n", article.title);
 		System.out.printf("내용 : %s\n", article.body);
 	}
 
 	public void doModify(String cmd) {
+		if (!Session.isLogined()) {
+			System.out.println("로그인 후 이용해주세요.");
+			return;
+		}
+		
 		int id = Integer.parseInt(cmd.substring(14).trim());
 		
 		int articleCount = articleService.getArticleCount(id);
@@ -88,6 +100,11 @@ public class ArticleController {
 	}
 	
 	public void doDelete(String cmd) {
+		if (!Session.isLogined()) {
+			System.out.println("로그인 후 이용해주세요.");
+			return;
+		}
+		
 		int id = Integer.parseInt(cmd.substring(14).trim());
 
 		int articleCount = articleService.getArticleCount(id);

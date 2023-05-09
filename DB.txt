@@ -1,5 +1,5 @@
-DROP DATABASE IF EXISTS jdbc_article_manager;
-CREATE DATABASE jdbc_article_manager;
+DROP TABLE IF EXISTS article;
+CREATE TABLE article;
 USE jdbc_article_manager;
 
 CREATE TABLE article(
@@ -29,3 +29,10 @@ title = '제목3',
 `body` = '내용3';
 
 SELECT * FROM article;
+SELECT * FROM `member`;
+
+ALTER TABLE article ADD COLUMN memberId INT UNSIGNED NOT NULL AFTER updateDate;
+
+UPDATE article
+SET memberId = 1
+WHERE id IN(1,2,3)

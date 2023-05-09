@@ -15,7 +15,7 @@ public class ArticleDao {
 		this.conn = conn;
 	}
 	
-	public int doWrite(String title, String body) {
+	public int doWrite(String title, String body, int loginedMemberId) {
 		
 		SecSql sql = new SecSql();
 		sql.append("INSERT INTO article");
@@ -23,6 +23,7 @@ public class ArticleDao {
 		sql.append(", updateDate = NOW()");
 		sql.append(", title = ?", title);
 		sql.append(", `body` = ?", body);
+		sql.append(", memberId = ?", loginedMemberId);
 
 		return DBUtil.insert(conn, sql);
 	}

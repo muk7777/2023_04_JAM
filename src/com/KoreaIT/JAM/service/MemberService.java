@@ -1,6 +1,7 @@
 package com.KoreaIT.JAM.service;
 
 import java.sql.Connection;
+import java.util.Map;
 
 import com.KoreaIT.JAM.dao.MemberDao;
 import com.KoreaIT.JAM.dto.Member;
@@ -21,8 +22,14 @@ public class MemberService {
 		memberDao.doJoin(loginId, loginPw, name);
 	}
 
-	public Member doLogin(String loginId, String loginPw) {
-		return memberDao.doLogin(loginId, loginPw);
+	public Member getMember(String loginId) {
+		
+		Map<String, Object> memberMap = memberDao.getMember(loginId);
+		
+		if (memberMap.isEmpty()) {
+			return null;
+		}
+		return new Member(memberMap);
 	}
 
 }
