@@ -56,4 +56,8 @@ public class ArticleService {
 		articleDao.doDelete(id);
 	}
 
+	public int hitIncrease(int id) {
+		return articleDao.hitIncrease(id);
+	}
+
 }
